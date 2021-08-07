@@ -1,3 +1,8 @@
+if exists("g:loaded_search_in_scope")
+    finish
+endif
+let g:loaded_search_in_scope = 1
+
 let s:braces_filetypes = ["cpp", "php", "c", "rust", "go"]
 let s:indent_filetypes = ["python", "yaml"]
 

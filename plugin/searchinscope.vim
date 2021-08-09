@@ -108,7 +108,7 @@ function! s:select_indent_region()
         if chg
             let cnt = cnt - 1
         else
-            if sL;0 == 0
+            if s:l0 == 0
                 return
             endif
             let s:l0 -= 1

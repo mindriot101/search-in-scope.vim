@@ -1,7 +1,15 @@
+function Set(list)
+    local set = {}
+    for _, l in ipairs(list) do
+        set[l] = true
+    end
+    return set
+end
+
 -- defines which file types use which mappings
 local FILETYPE_MAP = {
-    indent = {"python", "yaml", "cloudformation"},
-    braces = {"c", "php", "rust", "cpp", "go"},
+    indent = Set{"python", "yaml", "cloudformation"},
+    braces = Set{"c", "php", "rust", "cpp", "go"},
 }
 
 local M = {}
@@ -19,11 +27,11 @@ function M.search_in_scope()
 end
 
 function M.set_visual_range()
-    if vim.tbl_contains(FILETYPE_MAP.braces, vim.bo.filetype) then
+    if FILETYPE_MAP.braces[vim.bo.filetype] then
         vim.cmd([[
             execute "normal! vi{\<esc>"
         ]])
-    elseif vim.tbl_contains(FILETYPE_MAP.indent, vim.bo.filetype) then
+    elseif FILETYPE_MAP.indent[vim.bo.filetype] then
         select_indent_region()
     else
         error("unimplemented")
@@ -128,11 +136,15 @@ function M.setup(user_opts)
     end
 
     if user_opts.indent_filetypes then
-        FILETYPE_MAP.indent = vim.tbl_extend("force", FILETYPE_MAP.indent, user_opts.indent_filetypes)
+        for _, v in ipairs(user_opts.indent_filetypes) do
+            FILETYPE_MAP.indent[v] = true
+        end
     end
 
     if user_opts.braces_filetypes then
-        FILETYPE_MAP.braces = vim.tbl_extend("force", FILETYPE_MAP.braces, user_opts.braces_filetypes)
+        for _, v in ipairs(user_opts.braces_filetypes) do
+            FILETYPE_MAP.braces[v] = true
+        end
     end
 end
 

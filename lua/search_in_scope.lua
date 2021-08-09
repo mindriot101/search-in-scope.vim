@@ -1,3 +1,9 @@
+-- defines which file types use which mappings
+local FILETYPE_MAP = {
+    indent = {"python", "yaml", "cloudformation"},
+    braces = {"c", "php", "rust", "cpp", "go"},
+}
+
 local M = {}
 
 M.config = {
@@ -13,11 +19,11 @@ function M.search_in_scope()
 end
 
 function M.set_visual_range()
-    if vim.bo.filetype == "c" then
+    if vim.tbl_contains(FILETYPE_MAP.braces, vim.bo.filetype) then
         vim.cmd([[
             execute "normal! vi{\<esc>"
         ]])
-    elseif vim.bo.filetype == "python" then
+    elseif vim.tbl_contains(FILETYPE_MAP.indent, vim.bo.filetype) then
         select_indent_region()
     else
         error("unimplemented")

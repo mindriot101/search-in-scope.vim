@@ -249,6 +249,14 @@ function M.setup(user_opts)
     if user_opts.bind then
         vim.api.nvim_set_keymap('n', user_opts.bind, [[:call SearchInScope()<Cr>]], { noremap = true, silent = true })
     end
+
+    if user_opts.indent_filetypes then
+        FILETYPE_MAP.indent = tbl_extend(FILETYPE_MAP.indent, user_opts.indent_filetypes)
+    end
+
+    if user_opts.braces_filetypes then
+        FILETYPE_MAP.braces = tbl_extend(FILETYPE_MAP.braces, user_opts.braces_filetypes)
+    end
 end
 
 return M

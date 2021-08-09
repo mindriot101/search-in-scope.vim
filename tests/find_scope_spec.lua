@@ -1,12 +1,10 @@
-local sis = require("search_in_scope")
-
 describe("selecting a scope", function()
     it("selects a scope between braces", function()
         vim.cmd(":view tests/files/example.c")
         vim.fn.cursor(3, 1)
         assert.equal(vim.bo.filetype, "c")
 
-        sis.set_visual_range()
+        require("search_in_scope").set_visual_range()
 
         local start_pos = vim.fn.getpos("'<")
         local end_pos = vim.fn.getpos("'>")
@@ -20,7 +18,7 @@ describe("selecting a scope", function()
         vim.fn.cursor(5, 9)
         assert.equal(vim.bo.filetype, "python")
 
-        sis.set_visual_range()
+        require("search_in_scope").set_visual_range()
 
         local start_pos = vim.fn.getpos("'<")
         local end_pos = vim.fn.getpos("'>")
@@ -37,7 +35,7 @@ describe("helper functions", function()
         assert.equal(vim.bo.filetype, "python")
 
         local initial = vim.fn.getpos(".")
-        local pos = sis.find_start_pos(initial)
+        local pos = require("search_in_scope").find_start_pos(initial)
 
         assert.are.same({0, 3, 1, 0}, pos)
     end)
@@ -48,7 +46,7 @@ describe("helper functions", function()
         assert.equal(vim.bo.filetype, "python")
 
         local initial = vim.fn.getpos(".")
-        local pos = sis.find_end_pos(initial)
+        local pos = require("search_in_scope").find_end_pos(initial)
 
         assert.are.same({0, 7, 14, 0}, pos)
     end)

@@ -17,6 +17,9 @@ end)
 require('search_in_scope').setup({
     -- example keybinding
     bind = "<leader>S",
+    -- add additional file types into the scope definition types
+    indent_filetypes = {"yaml"},
+    braces_filetypes = {"c"},
 })
 ```
 

@@ -251,11 +251,11 @@ function M.setup(user_opts)
     end
 
     if user_opts.indent_filetypes then
-        FILETYPE_MAP.indent = tbl_extend(FILETYPE_MAP.indent, user_opts.indent_filetypes)
+        FILETYPE_MAP.indent = vim.tbl_extend("force", FILETYPE_MAP.indent, user_opts.indent_filetypes)
     end
 
     if user_opts.braces_filetypes then
-        FILETYPE_MAP.braces = tbl_extend(FILETYPE_MAP.braces, user_opts.braces_filetypes)
+        FILETYPE_MAP.braces = vim.tbl_extend("force", FILETYPE_MAP.braces, user_opts.braces_filetypes)
     end
 end
 

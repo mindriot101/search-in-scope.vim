@@ -1,5 +1,8 @@
 local M = {}
 
+M.config = {
+}
+
 function M.search_in_scope()
     local pos = vim.fn.getpos(".")
     M.set_visual_range()
@@ -236,8 +239,10 @@ function select_indent_region_old()
     v.setpos(".", start)
 end
 
-function M.setup()
-    -- does nothing but can set the system up if required
+function M.setup(user_opts)
+    if user_opts.bind then
+        vim.api.nvim_set_keymap('n', user_opts.bind, [[:call SearchInScope()<Cr>]], { noremap = true, silent = true })
+    end
 end
 
 return M

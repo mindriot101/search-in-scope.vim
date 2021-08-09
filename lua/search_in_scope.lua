@@ -1,5 +1,14 @@
 local M = {}
 
+function M.search_in_scope()
+    local pos = vim.fn.getpos(".")
+    M.set_visual_range()
+    print(vim.inspect(vim.fn.getpos("'<")))
+    print(vim.inspect(vim.fn.getpos("'>")))
+    vim.fn.setpos(".", pos)
+    vim.fn.feedkeys([[/\%V]], 'n')
+end
+
 function M.set_visual_range()
     if vim.bo.filetype == "c" then
         vim.cmd([[
@@ -227,5 +236,8 @@ function select_indent_region_old()
     v.setpos(".", start)
 end
 
+function M.setup()
+    -- does nothing but can set the system up if required
+end
 
 return M

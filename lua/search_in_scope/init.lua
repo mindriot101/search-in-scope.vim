@@ -19,6 +19,10 @@ M.config = {
 
 function M.search_in_scope()
     local pos = vim.fn.getpos(".")
+    if vim.fn.indent(pos[2]) == 0 then
+        vim.fn.feedkeys([[/]], 'n')
+        return
+    end
     M.set_visual_range()
     print(vim.inspect(vim.fn.getpos("'<")))
     print(vim.inspect(vim.fn.getpos("'>")))
@@ -58,6 +62,14 @@ function M.find_start_pos(initial)
     return nil
 end
 
+function find_last_non_blank_line(start)
+    local curr = start
+    while vim.fn.indent(curr) == 0 do
+        curr = curr - 1
+    end
+    return curr
+end
+
 function M.find_end_pos(initial)
     vim.validate({
         initial={initial, 'table'}
@@ -71,8 +83,8 @@ function M.find_end_pos(initial)
 
     while line_number <= num_lines do
         local curr_indent = vim.fn.indent(line_number)
-        if curr_indent < indent then
-            local return_line_number = line_number - 1
+        if curr_indent < indent and curr_indent > 0 then
+            local return_line_number = find_last_non_blank_line(line_number - 1)
             -- temporarily set the cursor to find the end of the line
             vim.fn.cursor(return_line_number, 1)
             vim.cmd([[
@@ -86,7 +98,9 @@ function M.find_end_pos(initial)
     end
 
     -- assume end of file
-    return {initial[1], vim.fn.line("$"), 1, 0}
+    local line_number = vim.fn.line("$")
+    vim.fn.cursor(line_number, 1)
+    return {initial[1], line_number, vim.fn.col("$"), 0}
 end
 
 function on_empty_line(l)

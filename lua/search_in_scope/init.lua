@@ -24,8 +24,6 @@ function M.search_in_scope()
         return
     end
     M.set_visual_range()
-    print(vim.inspect(vim.fn.getpos("'<")))
-    print(vim.inspect(vim.fn.getpos("'>")))
     vim.fn.setpos(".", pos)
     vim.fn.feedkeys([[/\%V]], 'n')
 end
@@ -42,6 +40,23 @@ function M.set_visual_range()
     end
 end
 
+function find_first_non_blank_line(start)
+    local curr = start
+    while vim.fn.indent(curr) == 0 do
+        curr = curr + 1
+    end
+    return curr
+end
+
+
+function find_last_non_blank_line(start)
+    local curr = start
+    while vim.fn.indent(curr) == 0 do
+        curr = curr - 1
+    end
+    return curr
+end
+
 function M.find_start_pos(initial)
     vim.validate({
         initial={initial, 'table'}
@@ -53,21 +68,13 @@ function M.find_start_pos(initial)
 
     while line_number >= 1 do
         local curr_indent = vim.fn.indent(line_number)
-        if curr_indent < indent then
+        if curr_indent < indent and (line_number == 1 or curr_indent > 0) then
             return {initial[1], line_number + 1, 1, 0}
         end
         line_number = line_number - 1
     end
-    -- could not find the start pos
-    return nil
-end
-
-function find_last_non_blank_line(start)
-    local curr = start
-    while vim.fn.indent(curr) == 0 do
-        curr = curr - 1
-    end
-    return curr
+    -- could not find the start pos, assume start of file
+    return initial
 end
 
 function M.find_end_pos(initial)

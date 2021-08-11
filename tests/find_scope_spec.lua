@@ -64,6 +64,17 @@ describe("helper functions", function()
         assert.are.same({0, 7, 14, 0}, pos)
     end)
 
+    it("finds the start position with blank lines", function()
+        vim.cmd(":view tests/files/example2.py")
+        vim.fn.cursor(7, 9)
+        assert.equal(vim.bo.filetype, "python")
+
+        local initial = vim.fn.getpos(".")
+        local pos = require("search_in_scope").find_start_pos(initial)
+
+        assert.are.same({0, 3, 1, 0}, pos)
+    end)
+
     it("finds the end position with blank lines", function()
         vim.cmd(":view tests/files/example.py")
         vim.fn.cursor(2, 9)
